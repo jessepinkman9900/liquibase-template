@@ -1,0 +1,42 @@
+name: "Rollback Database"
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment to Rollback"
+        required: true
+        default: "prod"
+        type: choice
+        options:
+          - prod
+      tag:
+        description: "Tag to rollback to"
+        required: true
+        type: string
+
+jobs:
+  prod-west:
+    if: ${{ inputs.environment }} == 'prod'
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+        # todo: fetch secrets from KV
+      - uses: liquibase-github-actions/validate@v4.22.0
+        with:
+          showSummary: true
+          rollbackOnError: true
+          changelogFile: ./changelogs/database/database.yaml
+          url: ${{ secrets.DATABASE_URL }}
+          database: ${{ secrets.DATABASE_NAME }}
+          username: ${{ secrets.DATABASE_USER }}
+          password: ${{ secrets.DATABASE_PASSWORD }}
+      - uses: liquibase-github-actions/update@v4.22.0
+        with:
+          showSummary: true
+          rollbackOnError: true
+          changelogFile: ./changelogs/database/database.yaml
+          url: ${{ secrets.DATABASE_URL }}
+          database: ${{ secrets.DATABASE_NAME }}
+          username: ${{ secrets.DATABASE_USER }}
+          password: ${{ secrets.DATABASE_PASSWORD }}

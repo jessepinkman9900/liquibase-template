@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - include:
+      file: /changelogs/roles/roles.yaml
+  - include:
+      file: /changelogs/schemas/schemas.yaml
+  - include:
+      file: /changelogs/tables/schema_1/tables.yaml
+  - include:
+      file: /changelogs/tables/schema_2/tables.yaml

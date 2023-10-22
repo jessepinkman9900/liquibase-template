@@ -1,0 +1,31 @@
+name: "Tag Database"
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment to tag"
+        required: true
+        default: "prod"
+        type: choice
+        options:
+          - prod
+      tag:
+        description: "Tag to apply to the database"
+        required: true
+        type: string
+
+jobs:
+  prod-west:
+    if: ${{ inputs.environment }} == 'prod'
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+        # todo: fetch secrets from KV
+      - uses: liquibase-github-actions/tag@v4.22.0
+        with:
+          tag: ${{ inputs.tag }}
+          url: ${{ secrets.DATABASE_URL }}
+          database: ${{ secrets.DATABASE_NAME }}
+          username: ${{ secrets.DATABASE_USER }}
+          password: ${{ secrets.DATABASE_PASSWORD }}
