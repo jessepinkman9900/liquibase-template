@@ -1,0 +1,14 @@
+---
+version: "3.9"
+services:
+  postgres:
+    image: postgres:14
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=pwd
+      - POSTGRES_DB=job
+    ports:
+      - "5432:5432"
+  # uncomment: to persist data on local
+  #    volumes:
+  #      - ./postgres:/var/lib/postgresql
